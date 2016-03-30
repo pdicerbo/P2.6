@@ -1,0 +1,42 @@
+Total No of parameters = 13
+   No. of X gridpoints = 200.0
+        No. of periods = 3.0d0
+       cfl conditions  = 0.95d0
+        Dump Frequency = 1.0d0
+              velocity = 1.0d0
+   viscosity parameter = 1.d-14
+           wave number = 6.0d0
+                xstep1 = -1.d0
+                xstep2 = 0.25d0 
+     initial data flag = 2.0d0
+      time update flag = 1.0d0
+  boundary condts flag = 1.0d0
+  equation type   flag = 3.0d0
+
+-------------------------------------------------------------------------
+	     Legend
+
+     initial data flag = 1 :: gaussian
+     initial data flag = 2 :: square wave
+     initial data flag = 3 :: wave packet
+     initial data flag = 4 :: sine wave
+
+      time update flag = 0 :: ftcs
+      time update flag = 1 :: upwind
+      time update flag = 2 :: lax friedrichs
+      time update flag = 3 :: lax wendroff
+      time update flag = 4 :: leapfrog
+      time update flag = 5 :: iterative crank nicholson
+
+ boundary condtns flag = 1 :: sommerfeld
+ boundary condtns flag = 2 :: reflective
+ boundary condtns flag = 3 :: periodic
+
+    equation type flag = 1 :: advection equation
+    equation type flag = 2 :: wave      equation
+    equation type flag = 3 :: burgers   equation
+
+                xstep1 = 0.35d0 
+                xstep2 = 0.65d0 
+
+to do: analytic for wave with reflecting bcs
