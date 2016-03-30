@@ -78,7 +78,8 @@ SUBROUTINE ADERDGInit
                 CASE(2)
                     tri(:,count) = (/ idxn(i,j,k), idxn(i+1,j,k), idxn(i,j+1,k), idxn(i+1,j+1,k) /) 
                 CASE(3)
-                    tri(:,count) = (/ idxn(i,j,k), idxn(i+1,j,k), idxn(i,j+1,k), idxn(i+1,j+1,k), idxn(i,j,k+1), idxn(i+1,j,k+1), idxn(i,j+1,k+1), idxn(i+1,j+1,k+1) /) 
+                    tri(:,count) = (/ idxn(i,j,k), idxn(i+1,j,k), idxn(i,j+1,k), idxn(i+1,j+1,k), idxn(i,j,k+1), idxn(i+1,j,k+1),  &
+                                   &idxn(i,j+1,k+1), idxn(i+1,j+1,k+1) /) 
                 END SELECT                
             ENDDO
         ENDDO
@@ -283,7 +284,8 @@ SUBROUTINE ADERDGInit
         DO j = 1, N
            DO i = 1, N 
               c = c + 1 
-              subtri(:,c) = (/ idxn(i,j,k), idxn(i+1,j,k), idxn(i+1,j+1,k), idxn(i,j+1,k), idxn(i,j,k+1), idxn(i+1,j,k+1), idxn(i+1,j+1,k+1), idxn(i,j+1,k+1) /)         
+              subtri(:,c) = (/ idxn(i,j,k), idxn(i+1,j,k), idxn(i+1,j+1,k), idxn(i,j+1,k), idxn(i,j,k+1), idxn(i+1,j,k+1), &
+                            &idxn(i+1,j+1,k+1), idxn(i,j+1,k+1) /)         
            ENDDO
         ENDDO
      ENDDO

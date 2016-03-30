@@ -22,7 +22,7 @@ FC = pgf77
 FFLAGS = -O
 # insert below the f90 compiler available, eg F90 = pgf90 or F90 = ifort
 #F90 = g95
-F90 = /opt/intel/bin/ifort
+F90 = gfortran # /opt/intel/bin/ifort
 #
 F90FLAGS = -O
 #LDFLAGS = -s
