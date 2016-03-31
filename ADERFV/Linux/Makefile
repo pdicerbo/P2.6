@@ -22,7 +22,7 @@ LTEC   =
 LFLAGS = $(LTEC) #-cxxlib
 
 # COMPILATION OPTIMIZATION FLAGS for ifort
-F90FLAGS = -c -O2 #-r8 -align -fpp  
+F90FLAGS = -c -O2 -fdefault-real-8 #-r8 -align -fpp  
 
 # PREPROCESSOR DEFINITIONS 
 FCFLAGS =           
