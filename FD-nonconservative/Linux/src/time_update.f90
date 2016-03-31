@@ -103,27 +103,27 @@ subroutine upwd_update(xnpo,xn,yn,Dt,Dx,JG,bc_flag,eqtype_flag,vv,nu)
 !!$     enddo
 
      ! Non-conservative
-     do j = 2, JG - 1
-        xnpo(j) = xn(j) - Dt/Dx*xn(j)*( xn(j) - xn(j-1) )
-     enddo
+     ! do j = 2, JG - 1
+     !    xnpo(j) = xn(j) - Dt/Dx*xn(j)*( xn(j) - xn(j-1) )
+     ! enddo
      
-!!$     if (abs(vv).gt.0.0d0) then 
-!!$        do j = 2, JG - 1
-!!$           xnpo(j) = xn(j) - 0.5d0*Dt_o_Dx*( xn(j)**2 - xn(j-1)**2 ) +   &
-!!$                &        nu*Dt_o_Dx2*( xn(j+1) - 2.0d0*xn(j) + xn(j-1) )
-!!$        enddo
-!!$     else 
-!!$        do j = 2, JG - 1
-!!$           xnpo(j) = xn(j) - 0.5d0*Dt_o_Dx*( xn(j+1)**2 - xn(j)**2 ) +   &
-!!$                &        nu*Dt_o_Dx2*( xn(j+1) - 2.0d0*xn(j) + xn(j-1) )
-!!$        enddo
-!!$     end if
+     if (abs(vv).gt.0.0d0) then 
+        do j = 2, JG - 1
+           xnpo(j) = xn(j) - 0.5d0*Dt_o_Dx*( xn(j)**2 - xn(j-1)**2 ) +   &
+                &        nu*Dt_o_Dx2*( xn(j+1) - 2.0d0*xn(j) + xn(j-1) )
+        enddo
+     else 
+        do j = 2, JG - 1
+           xnpo(j) = xn(j) - 0.5d0*Dt_o_Dx*( xn(j+1)**2 - xn(j)**2 ) +   &
+                &        nu*Dt_o_Dx2*( xn(j+1) - 2.0d0*xn(j) + xn(j-1) )
+        enddo
+     end if
   else 
      !* sanity check *!
      write(*,*)'problems with the eqtype_flag',bc_flag
      stop
   end if
-
+  
   !*--------------------\
   !* boundary conditions >
   !*--------------------/

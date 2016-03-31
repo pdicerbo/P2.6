@@ -51,9 +51,9 @@ PROGRAM ADERDG3D
      ENDIF
      time = time + dt 
 
-     IF (  MOD ( timestep, 10) .EQ. 0) THEN  
-        CALL WriteDataGnuplot
-     ENDIF
+     ! IF (  MOD ( timestep, 10) .EQ. 0) THEN  
+     !    CALL WriteDataGnuplot
+     ! ENDIF
   ENDDO
   CALL CPU_TIME(tCPU2)
 

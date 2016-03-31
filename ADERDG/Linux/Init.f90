@@ -28,17 +28,17 @@ SUBROUTINE ADERDGInit
     ! Here, you need to define the computational domain and the number of cells. 
     ! This is typically read from a parameter file 
     !
-    xL = (/ -0.5, -0.5, -0.5 /)                                     ! lower-left corner of the domain 
-    xR = (/ +0.5, +0.5, +0.5 /)                                     ! upper right corner of the domain 
+    xL = (/ 0.0 , 0.0, -0.5 /)                                     ! lower-left corner of the domain 
+    xR = (/ 10.0, 10.0, +0.5 /)                                     ! upper right corner of the domain 
     IMAX = 36                                                       ! Number of elements in x,y,z direction 
-    JMAX = 1 
+    JMAX = 36 
     KMAX = 1  
     VMAX = (/ IMAX, JMAX, KMAX /)                                   ! Vector of the number of elements in each space dimension 
     dx = (xR-xL)/VMAX                                               ! Mesh spacing 
     NMAX = 100000                                                   ! Max. number of time steps 
     timestep = 0                                                    ! initial time step number 
     time = 0.                                                       ! initial time 
-    tend = 0.1 !25                                                     ! final time 
+    tend = 1.0 !25                                                     ! final time 
     Basefile = 'Test'                                               ! Base filename for writing results 
     !
     nElem = IMAX*JMAX*KMAX                                          ! Number of elements 
@@ -325,15 +325,33 @@ SUBROUTINE InitialField(u0,xGP)
     ! Local variables 
     REAL :: VBase(nVar), ampl(nVar), sigma(d) 
     REAL :: V0(nVar) 
+    REAL :: delta_rho, delta_T, delta_p, r, delta_vx, delta_vy
+    REAL :: PI, epsilon
     ! 
 
     ! Gaussian perturbation 
-    sigma = (/ 0.05, 0.05, 0.05 /)       ! half-width
-    VBase(:) = (/ 1., 0., 0., 0., 1. /)  ! base-state 
-    ampl(:)  = 0.                        ! perturbation amplitude vector 
-    ampl(5)   = 1e-3                     ! 
-    V0(:) = VBase(:) + ampl(:)*EXP( -0.5*SUM(xGP(1:nDim)**2/sigma(1:nDim)**2) )    
+    ! sigma = (/ 0.05, 0.05, 0.05 /)       ! half-width
+    ! VBase(:) = (/ 1., 0., 0., 0., 1. /)  ! base-state 
+    ! ampl(:)  = 0.                        ! perturbation amplitude vector 
+    ! ampl(5)   = 1e-3                     ! 
+    ! V0(:) = VBase(:) + ampl(:)*EXP( -0.5*SUM(xGP(1:nDim)**2/sigma(1:nDim)**2) )    
 
+    PI = ACOS(-1.0)
+    epsilon = 5.0
+    
+    r = SQRT( (xGP(1) - 5.0)**2 + (xGP(2) - 5.0)**2)
+    delta_T   = - epsilon**2*(EQN%gamma - 1.0) / (8.0*EQN%gamma*PI**2)*EXP(1.0 - r**2)
+    delta_rho = (1.0 + delta_T)**(1.0/(EQN%gamma - 1.0)) - 1.0
+    delta_p   = (1.0 + delta_T)**(EQN%gamma/(EQN%gamma - 1.0)) - 1.0
+    delta_vx  = -(xGP(2) - 5.0) * epsilon / ( 2.0 * PI )*EXP(0.5*(1.0 - r**2))
+    delta_vy  =  (xGP(1) - 5.0) * epsilon / ( 2.0 * PI )*EXP(0.5*(1.0 - r**2))
+
+    V0(1) = 1.0 + delta_rho
+    V0(2) = 1.0 + delta_vx
+    V0(3) = 1.0 + delta_vy
+    V0(4) = 0.0
+    V0(5) = 1.0 + delta_p
+    
     ! A simple debug check for the computation of derivatives 
     !u0 = 0. 
     !u0(1) = 0.123 !*xGP(1) 

@@ -33,7 +33,7 @@ SUBROUTINE ADERFVInit
   !
   xL = -0.5                                                       ! lower-left corner of the domain 
   xR =  0.5                                                       ! upper right corner of the domain 
-  IMAX = 36                                                       ! Number of elements in x,y,z direction 
+  IMAX = 200 !36                                                       ! Number of elements in x,y,z direction 
   VMAX = IMAX                                                     ! Vector of the number of elements in each space dimension 
   dx = (xR-xL)/VMAX                                               ! Mesh spacing 
   NMAX = 100000                                                   ! Max. number of time steps 
@@ -236,11 +236,29 @@ SUBROUTINE InitialField(u0,xGP)
   ! 
   
   ! Gaussian perturbation 
-  sigma = (/ 0.05, 0.05, 0.05 /)       ! half-width
-  VBase(:) = (/ 1., 0., 0., 0., 1. /)  ! base-state 
-  ampl(:)  = 0.                        ! perturbation amplitude vector 
-  ampl(5)   = 1e-3                     ! 
-  V0(:) = VBase(:) + ampl(:)*EXP( -0.5*SUM(xGP(1:nDim)**2/sigma(1:nDim)**2) )    
+  ! sigma = (/ 0.05, 0.05, 0.05 /)       ! half-width
+  ! VBase(:) = (/ 1., 0., 0., 0., 1. /)  ! base-state 
+  ! ampl(:)  = 0.                        ! perturbation amplitude vector 
+  ! ampl(5)   = 1e-3                     ! 
+  ! V0(:) = VBase(:) + ampl(:)*EXP( -0.5*SUM(xGP(1:nDim)**2/sigma(1:nDim)**2) )    
+
+  IF ( xGP(1) < 0.0) THEN
+     
+     V0(1) = 0.445
+     V0(2) = 0.698
+     V0(3) = 0.0
+     V0(4) = 0.0
+     V0(5) = 3.528
+     
+  ELSE
+
+     V0(1) = 0.5
+     V0(2) = 0.0
+     V0(3) = 0.0
+     V0(4) = 0.0
+     V0(5) = 0.571
+
+  ENDIF
   
   ! A simple debug check for the computation of derivatives 
   !u0 = 0. 

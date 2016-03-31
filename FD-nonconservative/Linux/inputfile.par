@@ -11,7 +11,7 @@ Total No of parameters = 13
      initial data flag = 2.0d0
       time update flag = 1.0d0
   boundary condts flag = 1.0d0
-  equation type   flag = 3.0d0
+  equation type   flag = 1.0d0
 
 -------------------------------------------------------------------------
 	     Legend

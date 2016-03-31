@@ -55,6 +55,8 @@ SUBROUTINE WriteDataGnuplot
            WRITE(33,321) xvec(1), VN(5)
         CASE(2)
            WRITE(31,322) xvec(1), xvec(2), VN(1)
+           WRITE(32,322) xvec(1), xvec(2), VN(2)
+           WRITE(33,322) xvec(1), xvec(2), VN(5)
         CASE(3)
            WRITE(31,323) xvec(1), xvec(2), xvec(3), VN(1)
         ENDSELECT   
