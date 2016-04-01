@@ -63,6 +63,7 @@ PROGRAM ADERDG3D
   PRINT *, ' Time / DOF update = ', (tCPU2-tCPU1)/TEU/PRODUCT(nDOF(1:nDim))  
 
   CALL WriteDataGnuplot
+  CALL AnalyseError
 
   PRINT *, ' ----------------------------------------- ' 
   PRINT *, '  Program terminated!                      ' 
