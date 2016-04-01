@@ -161,7 +161,14 @@ SUBROUTINE L2_NormSol
 
   ENDDO
 
-  WRITE(*,*) time, "   ", L2_norm(1)
+  ! WRITE(*,*) time, "   ", L2_norm(1)
+  OPEN(38, file='L2-norm-rho.txt', status='unknown', position='append')
+
+  WRITE(38,321) time, L2_norm(1)
+  CLOSE(38)
+
+321 FORMAT(1x,2(E21.12,1x))
+
   ! Do iVar = 1, nVar
 
   !    WRITE(*,*) '========================================'

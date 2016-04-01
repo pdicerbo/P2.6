@@ -47,17 +47,17 @@ PROGRAM ADERDG3D
         CALL ElementUpdate(uh(:,:,:,:,iElem),duh(:,:,:,:,iElem))
      ENDDO
      
-     ! IF(MOD(timestep,10)==0) THEN
-     !    PRINT *, ' n = ', timestep, ' t = ', time 
-     ! ENDIF
+     IF(MOD(timestep,10)==0) THEN
+        PRINT *, ' n = ', timestep, ' t = ', time 
+     ENDIF
 
-     CALL L2_NormSol
+     ! CALL L2_NormSol
      
      time = time + dt 
 
-     ! IF (  MOD ( timestep, 10) .EQ. 0) THEN  
-     !    CALL WriteDataGnuplot
-     ! ENDIF
+     IF (  MOD ( timestep, 10) .EQ. 0) THEN  
+        CALL WriteDataGnuplot
+     ENDIF
   ENDDO
   CALL CPU_TIME(tCPU2)
 
@@ -67,7 +67,7 @@ PROGRAM ADERDG3D
   PRINT *, ' Time / DOF update = ', (tCPU2-tCPU1)/TEU/PRODUCT(nDOF(1:nDim))  
 
   CALL WriteDataGnuplot
-  CALL AnalyseError
+  ! CALL AnalyseError
 
   PRINT *, ' ----------------------------------------- ' 
   PRINT *, '  Program terminated!                      ' 
