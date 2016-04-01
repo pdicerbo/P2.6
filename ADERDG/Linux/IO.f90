@@ -74,39 +74,12 @@ SUBROUTINE WriteDataGnuplot
 323 FORMAT(1x,4(E21.12,1x))
     
 END SUBROUTINE WriteDataGnuplot
-    
+ 
 SUBROUTINE AnalyseError
 
   USE typesDef   
   IMPLICIT NONE 
 
-!   INTEGER :: i, j, k, iElem, iErr, iVar
-!   REAL :: x0(d), xGP(d), u0(nVar), pexact(nVar), aux(d)
-!   REAL :: ustate(nVar), pstate(nVar), locError(nVar)
-!   REAL :: L2_norm(nVar)
-
-!   L2_norm = 0.0
-
-!   DO iElem = 1, nElem
-
-!      x0 = x(:, tri(1, iElem))
-     
-!      DO k = 1, nDOF(3)
-!         DO j = 1, nDOF(2)
-!            DO i = 1, nDOF(1)
-
-!               xGP = x0 + (/ xiGPN(i), xiGPN(j), xiGPN(k) /) * dx
-
-!               ! Exact solution
-!               CALL InitialField(u0, xGP)
-!               CALL PDECons2Prim(pexact, u0, iErr)
-
-!               ! DG solution
-!               ustate = uh(:, i, j, k, iElem)
-!               CALL PDECons2Prim(pstate, ustate, iErr)
-
-!               locError = ABS( pexact - pstate )
-! =======
   INTEGER :: i, j, k, iElem,iErr,iVar
   REAL :: x0(d), xGP(d),u0(nVar),pexact(nVar), aux(d)
   REAL :: ustate(nVar), pstate(nVar), locError(nVar)
@@ -153,3 +126,49 @@ SUBROUTINE AnalyseError
   ENDDO
   
 END  SUBROUTINE AnalyseError
+
+SUBROUTINE L2_NormSol
+
+  USE typesDef   
+  IMPLICIT NONE 
+
+  INTEGER :: i, j, k, iElem,iErr,iVar
+  REAL :: x0(d), xGP(d),u0(nVar),pexact(nVar), aux(d)
+  REAL :: ustate(nVar), pstate(nVar), locError(nVar)
+  REAL :: L2_norm(nVar)
+
+  L2_norm(:) = 0.0
+
+  DO iElem = 1, nElem
+     
+     x0 = x(:,tri(1,iElem))
+
+     DO k = 1, nDOF(3)
+        DO j = 1, nDOF(2)
+           DO i = 1, nDOF(1)
+              
+              ! DG solution
+              ustate = uh(:,i,j,k,iElem)  
+              CALL PDECons2Prim(pstate,ustate,iErr)
+
+              aux = (/ wGPN(i), wGPN(j), wGPN(k) /)
+
+              L2_norm = L2_norm + PRODUCT(aux(1:nDim))*ABS(pstate)**2*PRODUCT(dx(1:nDim))
+              
+           ENDDO
+        ENDDO
+     ENDDO
+
+  ENDDO
+
+  WRITE(*,*) time, "   ", L2_norm(1)
+  ! Do iVar = 1, nVar
+
+  !    WRITE(*,*) '========================================'
+  !    WRITE(*,*) 'L2 Error of variable',iVar
+  !    WRITE(*,*) L2_norm(iVar)
+  !    WRITE(*,*) '========================================'
+
+  ! ENDDO
+  
+END  SUBROUTINE L2_NormSol

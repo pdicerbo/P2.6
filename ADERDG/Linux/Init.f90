@@ -337,27 +337,27 @@ SUBROUTINE InitialField(u0,xGP)
 
     ! Gaussian perturbation 
 
-    ! sigma = (/ 0.05, 0.05, 0.05 /)       ! half-width
-    ! VBase(:) = (/ 1., 0., 0., 0., 1. /)  ! base-state 
-    ! ampl(:)  = 0.                        ! perturbation amplitude vector 
-    ! ampl(5)   = 1e-3                     ! 
-    ! V0(:) = VBase(:) + ampl(:)*EXP( -0.5*SUM(xGP(1:nDim)**2/sigma(1:nDim)**2) )    
+    sigma = (/ 0.05, 0.05, 0.05 /)       ! half-width
+    VBase(:) = (/ 1., 0., 0., 0., 1. /)  ! base-state 
+    ampl(:)  = 0.                        ! perturbation amplitude vector 
+    ampl(5)   = 1e-3                     ! 
+    V0(:) = VBase(:) + ampl(:)*EXP( -0.5*SUM(xGP(1:nDim)**2/sigma(1:nDim)**2) )    
     
-    PI = ACOS(-1.0)
-    epsilon = 5.0
+    ! PI = ACOS(-1.0)
+    ! epsilon = 5.0
 
-    r         = SQRT(( xGP(1) - 5.0 - time)**2 + ( xGP(2) - 5.0 - time)**2)
-    delta_T   = - epsilon**2*(EQN%gamma  -  1.0)/(8.0*EQN%gamma*PI**2)*EXP(1.0 - r**2)
-    delta_rho = (1.0 + delta_T)**(1.0/(EQN%gamma -  1.0)) - 1.0
-    delta_vx  = - ( xGP(2) - 5.0 - time)*epsilon/(2.0*PI)*EXP(0.5*(1.0 - r**2))
-    delta_vy  =   ( xGP(1) - 5.0 - time)*epsilon/(2.0*PI)*EXP(0.5*(1.0 - r**2))
-    delta_p   = (1.0 + delta_T)**(EQN%gamma/(EQN%gamma -  1.0)) - 1.0
+    ! r         = SQRT(( xGP(1) - 5.0 - time)**2 + ( xGP(2) - 5.0 - time)**2)
+    ! delta_T   = - epsilon**2*(EQN%gamma  -  1.0)/(8.0*EQN%gamma*PI**2)*EXP(1.0 - r**2)
+    ! delta_rho = (1.0 + delta_T)**(1.0/(EQN%gamma -  1.0)) - 1.0
+    ! delta_vx  = - ( xGP(2) - 5.0 - time)*epsilon/(2.0*PI)*EXP(0.5*(1.0 - r**2))
+    ! delta_vy  =   ( xGP(1) - 5.0 - time)*epsilon/(2.0*PI)*EXP(0.5*(1.0 - r**2))
+    ! delta_p   = (1.0 + delta_T)**(EQN%gamma/(EQN%gamma -  1.0)) - 1.0
 
-    V0(1) = 1.0 + delta_rho
-    V0(2) = 1.0 + delta_vx
-    V0(3) = 1.0 + delta_vy
-    V0(4) = 0.0
-    V0(5) = 1.0 + delta_p
+    ! V0(1) = 1.0 + delta_rho
+    ! V0(2) = 1.0 + delta_vx
+    ! V0(3) = 1.0 + delta_vy
+    ! V0(4) = 0.0
+    ! V0(5) = 1.0 + delta_p
     
     
     ! A simple debug check for the computation of derivatives 

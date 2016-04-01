@@ -46,9 +46,13 @@ PROGRAM ADERDG3D
      DO iElem  = 1, nElem
         CALL ElementUpdate(uh(:,:,:,:,iElem),duh(:,:,:,:,iElem))
      ENDDO
-     IF(MOD(timestep,10)==0) THEN
-        PRINT *, ' n = ', timestep, ' t = ', time 
-     ENDIF
+     
+     ! IF(MOD(timestep,10)==0) THEN
+     !    PRINT *, ' n = ', timestep, ' t = ', time 
+     ! ENDIF
+
+     CALL L2_NormSol
+     
      time = time + dt 
 
      ! IF (  MOD ( timestep, 10) .EQ. 0) THEN  
