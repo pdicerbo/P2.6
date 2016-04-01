@@ -55,6 +55,8 @@ SUBROUTINE WriteDataGnuplot
            WRITE(33,321) xvec(1), VN(5)
         CASE(2)
            WRITE(31,322) xvec(1), xvec(2), VN(1)
+           WRITE(32,322) xvec(1), xvec(2), VN(2)
+           WRITE(33,322) xvec(1), xvec(2), VN(5)
         CASE(3)
            WRITE(31,323) xvec(1), xvec(2), xvec(3), VN(1)
         ENDSELECT   
@@ -73,3 +75,57 @@ SUBROUTINE WriteDataGnuplot
     
 END SUBROUTINE WriteDataGnuplot
     
+
+SUBROUTINE AnalyseError
+
+  USE typesDef   
+  IMPLICIT NONE 
+
+  INTEGER :: i, j, k, iElem,iErr,iVar
+  REAL :: x0(d), xGP(d),u0(nVar),pexact(nVar), aux(d)
+  REAL :: ustate(nVar), pstate(nVar), locError(nVar)
+  REAL :: L2_norm(nVar)
+
+  L2_norm(:) = 0.0
+
+  DO iElem = 1, nElem
+     
+     x0 = x(:,tri(1,iElem))
+
+     DO k = 1, nDOF(3)
+        DO j = 1, nDOF(2)
+           DO i = 1, nDOF(1)
+              
+              xGP = x0 + (/ xiGPN(i), xiGPN(j), xiGPN(k) /)*dx(:)
+
+              ! Exact solution
+              CALL InitialField(u0,xGP) 
+              CALL PDECons2Prim(pexact,u0,iErr)
+
+              ! DG solution
+              ustate = uh(:,i,j,k,iElem)  
+              CALL PDECons2Prim(pstate,ustate,iErr)
+
+              locError = ABS( pexact - pstate)
+
+              aux = (/ wGPN(i), wGPN(j), wGPN(k) /)
+
+              L2_norm = L2_norm + PRODUCT(aux(1:nDim))*locError**2*PRODUCT(dx(1:nDim))
+
+           ENDDO
+        ENDDO
+     ENDDO
+
+  ENDDO
+
+
+  DO iVar = 1, nVar
+
+     WRITE(*,*)'====================================='
+     WRITE(*,*)'L2 Error of variable',iVar
+     WRITE(*,*) L2_norm(iVar)
+     WRITE(*,*)'====================================='
+
+  ENDDO
+
+END SUBROUTINE AnalyseError

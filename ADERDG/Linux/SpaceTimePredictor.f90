@@ -18,6 +18,7 @@ SUBROUTINE ADERSpaceTimePredictorNonlinear(lqhi,lFhi,lQbnd,lFbnd,luh)
   REAL    :: lqt(nVar,nDOF(1),nDOF(2),nDOF(3),nDOF(0))                ! time derivative qt of q
   REAL    :: res                                                      ! residual
   REAL, PARAMETER :: tol = 1e-7                                      ! tolerance
+  INTEGER, PARAMETER :: MAXNEWTON = 50
   !
   DO k = 1, nDOF(3)
      DO j = 1, nDOF(2)
@@ -39,7 +40,7 @@ SUBROUTINE ADERSpaceTimePredictorNonlinear(lqhi,lFhi,lQbnd,lFbnd,luh)
   ENDDO
   !
   ! Discrete Picard iterations. This set of nested loops should (theoretically) be a dream for vectorization, since they are rather independent...
-  DO iter = 1, N+1
+  DO iter = 1, MAXNEWTON
      ! save old space-time DOF
      lqhold = lqh
      DO l = 1, nDOF(0) ! loop over DOF in time

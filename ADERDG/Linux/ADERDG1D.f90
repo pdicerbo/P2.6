@@ -25,8 +25,7 @@ PROGRAM ADERDG3D
      CALL CalcTimeStep  
      ! ADER predictor step 
      DO iElem  = 1, nElem
-        CALL ADERSpaceTimePredictorNonlinear(qhi(:,:,:,:,iElem),Fhi(:,:,:,:,:,iElem),qBnd(:,:,:,:,iElem),FBnd(:,:,:,:,iElem), &
-                                            &uh(:,:,:,:,iElem))  
+        CALL ADERSpaceTimePredictorNonlinear(qhi(:,:,:,:,iElem),Fhi(:,:,:,:,:,iElem),qBnd(:,:,:,:,iElem),FBnd(:,:,:,:,iElem),uh(:,:,:,:,iElem))  
      ENDDO
      ! Compute the element volume integral 
      DO iElem  = 1, nElem
@@ -51,9 +50,9 @@ PROGRAM ADERDG3D
      ENDIF
      time = time + dt 
 
-     IF (  MOD ( timestep, 10) .EQ. 0) THEN  
-        CALL WriteDataGnuplot
-     ENDIF
+!!$     IF (  MOD ( timestep, 10) .EQ. 0) THEN  
+!!$        CALL WriteDataGnuplot
+!!$     ENDIF
   ENDDO
   CALL CPU_TIME(tCPU2)
 
@@ -63,6 +62,7 @@ PROGRAM ADERDG3D
   PRINT *, ' Time / DOF update = ', (tCPU2-tCPU1)/TEU/PRODUCT(nDOF(1:nDim))  
 
   CALL WriteDataGnuplot
+  CALL AnalyseError
 
   PRINT *, ' ----------------------------------------- ' 
   PRINT *, '  Program terminated!                      ' 
