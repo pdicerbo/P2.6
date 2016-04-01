@@ -94,6 +94,7 @@
 !
          IF(INTFLX.EQ.1)CALL HLL(CELLS)
          IF(INTFLX.EQ.2)CALL HLLC(CELLS)
+         IF(INTFLX.EQ.3)CALL RUSANOV(CELLS)
  
 !
 !        For comparison:
@@ -875,6 +876,115 @@
       END
 !----------------------------------------------------------------------*
  
+
+!======================================================================*
+      SUBROUTINE RUSANOV(CELLS)
+!======================================================================*
+!
+!     Purpose: to compute an intercell Godunov flux using
+!              the HLL approximate Riemann solver. See Chap 10,
+!              Ref. 1 and original references therein
+!
+      IMPLICIT NONE
+!
+!     Declaration of variables
+!
+      INTEGER  I, CELLS, IDIM, K
+      !
+      REAL MyLambda
+      REAL     C, CL, CR, CS, D, DL, DR, FD, FI, HLLFLUX,               &
+           &         P, PL, PR, SL, SM, SR, U, UL, UR,                  &
+           &         GAMMA, G1, G2, G3, G4, G5, G6, G7, G8, XPOS, DX, DT              
+!
+      PARAMETER (IDIM = 3000)
+!
+      DIMENSION D(2, -1:IDIM+2), U(2, -1:IDIM+2), P(2, -1:IDIM+2),      &
+           &    C(2, -1:IDIM+2),                                        &
+           &    CS(2, 3,-1:IDIM+2), FD(3,-1:IDIM+2), FI(2, 3,-1:IDIM+2)  
+      !
+      COMMON /STATES/ DL, UL, PL, CL, DR, UR, PR, CR
+      COMMON /PRIMIT/ D, U, P
+      COMMON /SOUNDS/ C
+      COMMON /CONSER/ CS
+      COMMON /FLUXES/ FI
+      COMMON /GAMMAS/ GAMMA, G1, G2, G3, G4, G5, G6, G7, G8
+      COMMON /MESHPA/ DT, DX
+!
+!     Compute fluxes on data and conserved variables
+!     in fictitious cells
+!
+      DO 10 I = 0, CELLS + 1
+!
+         IF(I.LT.1.OR.I.GT.CELLS)THEN
+            CS(1, 1,I) = D(1, I)
+            CS(1, 2,I) = D(1, I)*U(1, I)
+            CS(1, 3,I) = 0.5* D(1, I)*U(1, I)*U(1, I) + P(1, I)/G8
+         ENDIF
+!
+         FD(1,I) = CS(1, 2,I)
+         FD(2,I) = CS(1, 2,I)*U(1, I)   + P(1, I)
+         FD(3,I) = U(1, I)*(CS(1, 3,I)  + P(1, I))
+!
+ 10   CONTINUE
+!
+!     Solve Riemann problem (i,i+1) and store quantities in I
+!
+      DO 20 I = 0, CELLS
+!
+         XPOS = (REAL(I) - 0.5)*DX
+!ciao
+         DL = D(1, I)
+         UL = U(1, I)
+         PL = P(1, I)
+         CL = C(1, I)
+!
+         DR = D(1, I + 1)
+         UR = U(1, I + 1)
+         PR = P(1, I + 1)
+         CR = C(1, I + 1)
+!
+!        Calculate estimates for wave speeds using adaptive
+!        approximate-state Riemann solvers
+!
+         CALL ESTIME(SL, SM, SR)
+         MyLambda = MAX(ABS(SL),ABS(SR))
+!
+         IF(SL.GE.0.0)THEN
+!
+!           Right-going supersonic flow
+!
+            DO K = 1, 3
+               FI(1, K, I) = FD(K, I)
+            ENDDO
+!
+         ENDIF
+!
+         IF(SL.LE.0.0.AND.SR.GE.0.0)THEN
+!
+!           Subsonic flow
+!
+            DO K = 1, 3
+               HLLFLUX = 0.5 * ( FD(K, I) + FD(K, I + 1) )
+               FI(1, K,I) = HLLFLUX - 0.5 * MyLambda*(CS(1, K, I + 1) - CS(1, K, I))               
+            ENDDO
+!
+         ENDIF
+!
+         IF(SR.LE.0.0)THEN
+!
+!           Left-going supersonic flow
+!
+            DO K = 1, 3
+               FI(1, K, I) = FD(K, I + 1)
+            ENDDO
+!
+         ENDIF
+ 
+ 20   CONTINUE
+!
+      END
+!----------------------------------------------------------------------*
+
 !======================================================================*
       SUBROUTINE ESTIME(SL, SM, SR)
 !======================================================================*

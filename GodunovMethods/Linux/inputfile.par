@@ -29,7 +29,7 @@ C----------------------------------------------------------------------C
 10           ! NFREQU    : Output frequency to screen  
 10000000     ! NTMAXI    : Maximum number of time steps
 1.0E+00      ! PSCALE    : Pressure scaling factor for printing  
-2            ! INTFLX    : Choice of intercell flux 
+3            ! INTFLX    : Choice of intercell flux 
 
 C----------------------------------------------------------------------C  
 
